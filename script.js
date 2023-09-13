@@ -7,7 +7,9 @@ let scoreContainer = document.querySelector(".score-container");
 let restart = document.getElementById('restart'); 
 let userScore = document.getElementById("user-score"); 
 let startScreen = document.querySelector(".start-screen"); 
+let optionsContainer = document.querySelector(".options-container"); 
 let startButton = document.getElementById("start-button");
+let startQuiz = document.getElementById("start-button")
 let questionCount; 
 let scoreCount = 0; 
 let count = 11;
@@ -15,95 +17,67 @@ let countdown;
 let length = 0;
 
 
-// Treatement of API 
-
-const API_URL = 'https://opentdb.com/api.php';
-
-// Query parameters
-const category = 20; 
-const difficulty = 'easy'; 
-const numberOfQuestions = 3; 
-
-// Construire l'URL de la requête
-const apiUrl = `${API_URL}?amount=${numberOfQuestions}&category=${category}&difficulty=${difficulty}&type=multiple&lang=fr`;
 
 
-fetch(apiUrl)
-.then(response => response.json())
-.then(data => {
+
+startQuiz.addEventListener("click", () => {
+
+    optionsContainer.classList.add('hide')
+
+    const numberOfQuestions = 10; 
+    const API_URL = 'https://opentdb.com/api.php'
+    const selectedCategory = document.getElementById("category").value;
+    const selectedDifficulty = document.getElementById("difficulty").value;
     
-    
-    const quizArray = data.results.map(result => {
-      return {
-        question: result.question,
-        options: [...result.incorrect_answers, result.correct_answer],
-        correct: result.correct_answer
-      };
-    });
+    // Construire l'URL de la requête en fonction des options sélectionnées
+    const apiUrl = `${API_URL}?amount=${numberOfQuestions}&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple&lang=fr`;
 
+    // Effectuer la requête API avec l'URL construit
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const quizArray = data.results.map(result => {
+                return {
+                    question: result.question,
+                    options: [...result.incorrect_answers, result.correct_answer],
+                    correct: result.correct_answer
+                };
+            });
 
-    window.onload = () => {
-        // console.log("I'm here in window load")
-        startScreen.classList.remove("hide");
-        displayContainer.classList.add("hide");
-        initial(quizArray);
-    }
-    
+            // Initialiser le quiz avec les questions récupérées
+            startQuizWithQuestions(quizArray);
 
-
-    startQuiz = () => {
-        // console.log("I'm here")
-        startScreen.classList.add("hide");
-        // console.log("DisplayContain : " + displayContainer)
-        displayContainer.classList.remove("hide");
-    
-        // console.log("point : 2");
-        initial(quizArray);
-    };
-
-    restart.addEventListener("click", () => {
-
-        initial(quizArray);
-
-        displayContainer.classList.remove("hide");  
-        scoreContainer.classList.add("hide");   
-    }); 
-    
-
-    // If we want the new questions to be generated upon restart, we will uncomment this code which will call a new version from the API
-    
-    
-    // fetch(apiUrl)
-    //   .then(response => response.json())
-    //   .then(data => {
+            window.onload = () => {
+                // console.log("I'm here in window load")
+                startScreen.classList.remove("hide");
+                displayContainer.classList.add("hide");
+                initial(quizArray);
+            }
         
-    //     const quizArray = data.results.map(result => {
-    //       return {
-    //         question: result.question,
-    //         options: [...result.incorrect_answers, result.correct_answer],
-    //         correct: result.correct_answer
-    //       };
-    //     });
-    //     initial(quizArray);
         
-    //   })
-    //   .catch(error => {
-    //     console.error('Erreur lors de la récupération des questions depuis l\'API', error);
-    //   });
-
+            restart.addEventListener("click", () => {
         
-    //     displayContainer.classList.remove("hide");  
-    //     scoreContainer.classList.add("hide");   
-    // }); 
+                initial(quizArray);
+        
+                displayContainer.classList.remove("hide");  
+                scoreContainer.classList.add("hide");   
+            }); 
+        
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des questions depuis l\'API', error.message);
+        });
+});
 
-})
+function startQuizWithQuestions(quizArray) {
 
-.catch(error => {
-    console.error('Erreur lors de la récupération des questions depuis l\'API', error.message);
+    startScreen.classList.add("hide");
+    // console.log("DisplayContain : " + displayContainer)
+    displayContainer.classList.remove("hide");
 
-
-})
-
+    initial(quizArray)
+    
+}
 
 
 
@@ -189,7 +163,7 @@ function quizCreater(quizArray) {
         question_DIV.innerHTML = i.question; 
         div.appendChild(question_DIV);
         
-        console.log('i.true : ', i.correct)
+        // console.log('i.true : ', i.correct)
         div.innerHTML +=   displayOptions(i, i.correct)
         
 

@@ -130,3 +130,34 @@ button{
     font-size: 1.5em;
     color: #fff;
 }
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4em;
+    gap: 3em;
+}
+
+
+
+.options-container label {
+    position: relative;
+    font-size: 1.1em;
+    color: #fff;
+    margin-bottom: -2.5em;
+    text-align: left;
+}
+
+.options-container select {
+    font-size: 1em;
+    padding: 0.5em;
+    border-radius: 0.2em;
+    border: 1px solid #c0bfd2;
+    background-color: #fff;
+    color: #1d2630;
+    width: 100%;
+    max-width: 300px; 
+    outline: none;
+}
+
